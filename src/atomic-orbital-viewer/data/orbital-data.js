@@ -1,5 +1,7 @@
 let orbitals = [
     {
+        minValue:-3.70,
+        maxValue: 3.70,
         regions: [
             { start: 0.111833, end: 3.57715, valueS: 0, valueE: 0, color: 0xc40000, func: undefined },
             { start: -3.57715, end: -0.1118333, valueS: 0, valueE: 0, color: 0x00b5b5, func: undefined }
@@ -9,6 +11,8 @@ let orbitals = [
         }
     },
     {
+        minValue:-7,
+        maxValue: 7,
         regions: [
             {
                 start: 0.253871, end: 6.84185, valueS: 0, valueE: 0, color: 0x00b5b5
@@ -37,6 +41,8 @@ let orbitals = [
         ]
     },
     {
+        minValue:-10,
+        maxValue: 10,
         regions: [
             {
                 color: 0x00b5b5, points: [

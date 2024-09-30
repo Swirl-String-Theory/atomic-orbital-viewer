@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { orbitals } from '../data/orbital-data';
 function createOrbitals() {
     let orbital = orbitals[0];
+    let minValue = orbital.minValue, maxValue = orbital.maxValue;
     var meshArr = [];
     orbital.regions.forEach(region => {
         const points = [];
@@ -33,6 +34,6 @@ function createOrbitals() {
         mesh.tick = () => { }
         meshArr.push(mesh);
     });
-    return meshArr;
+    return {meshArr, minValue, maxValue};
 }
 export { createOrbitals }

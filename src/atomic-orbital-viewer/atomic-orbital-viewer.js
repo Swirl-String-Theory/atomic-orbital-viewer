@@ -8,8 +8,10 @@ import { createScene } from './components/scene.js';
 import { createLights } from './components/lights.js';
 import { createAxis } from './components/axis.js';
 import { createOrbitals } from './components/orbitals.js';
+import { createPlane } from './components/plane.js';
+import { createPanel } from './components/panel.js';
 
-let camera, renderer, scene, loop, axis;
+let camera, renderer, scene, loop, axis, plane;
 
 class AtomicOrbital {
     constructor(container) {
@@ -19,16 +21,19 @@ class AtomicOrbital {
         loop = new Loop(camera, scene, renderer);
         container.append(renderer.domElement);
         axis = createAxis();
+
         const controls = createControls(camera, renderer.domElement);
         const { ambientLight, mainLight } = createLights();
-        
-        const meshArr = createOrbitals();
+
+        const { meshArr, minValue, maxValue } = createOrbitals();
         meshArr.forEach(_mesh => {
             loop.updatables.push(_mesh);
             scene.add(_mesh);
         })
         loop.updatables.push(controls);
-        scene.add(axis, ambientLight, mainLight);
+        createPanel(minValue, maxValue, this.changeIntersector);
+        plane = createPlane();
+        scene.add(axis, plane, ambientLight, mainLight);
         controls.addEventListener('change', () => { this.render(); });
         const resizer = new Resizer(container, camera, renderer);
     }
@@ -41,6 +46,10 @@ class AtomicOrbital {
 
     stop() {
         loop.stop();
+    }
+
+    changeIntersector(value) {
+        plane.position.set(0, value, 0);
     }
 }
 
