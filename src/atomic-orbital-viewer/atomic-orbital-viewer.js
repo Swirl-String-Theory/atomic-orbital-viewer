@@ -7,11 +7,12 @@ import { createCamera } from './components/camera.js';
 import { createScene } from './components/scene.js';
 import { createLights } from './components/lights.js';
 import { createAxis } from './components/axis.js';
-import { createOrbitals } from './components/orbitals.js';
-import { createPlane } from './components/plane.js';
-import { createPanel } from './components/panel.js';
+import { createOrbitals, getCoordinates } from './components/orbitals.js';
+import { createPlanar } from './components/planar.js';
+import { createControlPanel } from './components/control-panel.js';
+import { createPanel, updatePanel } from "./components/panel";
 
-let camera, renderer, scene, loop, axis, plane;
+let camera, renderer, scene, loop, axis, planar, panel;
 
 class AtomicOrbital {
     constructor(container) {
@@ -31,11 +32,12 @@ class AtomicOrbital {
             scene.add(_mesh);
         })
         loop.updatables.push(controls);
-        createPanel(minValue, maxValue, this.changeIntersector);
-        plane = createPlane();
-        scene.add(axis, plane, ambientLight, mainLight);
+        createControlPanel(minValue, maxValue, this.changeIntersector);
+        planar = createPlanar();
+        scene.add(axis, planar, ambientLight, mainLight);
         controls.addEventListener('change', () => { this.render(); });
         const resizer = new Resizer(container, camera, renderer);
+        panel = createPanel('Intersector Panel', true);
     }
     render() {
         renderer.render(scene, camera);
@@ -49,7 +51,8 @@ class AtomicOrbital {
     }
 
     changeIntersector(value) {
-        plane.position.set(0, value, 0);
+        planar.position.set(0, 0, value);
+        updatePanel(value);
     }
 }
 
