@@ -2,17 +2,17 @@
 import { createRenderer } from './systems/renderer.js';
 import { Resizer } from './systems/Resizer.js';
 import { Loop } from './systems/Loop.js';
-import { createControls } from './systems/controls.js';
+import { createOrbitControls } from './systems/orbit-controls.js';
 import { createCamera } from './components/camera.js';
 import { createScene } from './components/scene.js';
 import { createLights } from './components/lights.js';
 import { createAxis } from './components/axis.js';
-import { createOrbitals, getCoordinates } from './components/orbitals.js';
+import { createOrbitals, getRegions } from './components/orbitals.js';
 import { createPlanar } from './components/planar.js';
-import { createControlPanel } from './components/control-panel.js';
-import { createPanel, updatePanel } from "./components/panel";
+import { createSetting } from './components/settings.js';
+import { createIntersection, updateIntersection } from "./components/intersection.js";
 
-let camera, renderer, scene, loop, axis, planar, panel;
+let camera, renderer, scene, loop, axis, planar, allMesh, orbital = 0, intersection, intersector, regions;
 
 class AtomicOrbital {
     constructor(container) {
@@ -22,22 +22,15 @@ class AtomicOrbital {
         loop = new Loop(camera, scene, renderer);
         container.append(renderer.domElement);
         axis = createAxis();
-
-        const controls = createControls(camera, renderer.domElement);
+        const orbitControls = createOrbitControls(camera, renderer.domElement);
+        loop.updatables.push(orbitControls);
         const { ambientLight, mainLight } = createLights();
-
-        const { meshArr, minValue, maxValue } = createOrbitals();
-        meshArr.forEach(_mesh => {
-            loop.updatables.push(_mesh);
-            scene.add(_mesh);
-        })
-        loop.updatables.push(controls);
-        createControlPanel(minValue, maxValue, this.changeIntersector);
-        planar = createPlanar();
-        scene.add(axis, planar, ambientLight, mainLight);
-        controls.addEventListener('change', () => { this.render(); });
+        scene.add(axis, ambientLight, mainLight);
+        orbitControls.addEventListener('change', () => { this.render(); });
         const resizer = new Resizer(container, camera, renderer);
-        panel = createPanel('Intersector Panel', true);
+        this.init();    
+        regions = getRegions(orbital);
+        intersection = createIntersection('Intersection', intersector, regions);
     }
     render() {
         renderer.render(scene, camera);
@@ -50,10 +43,49 @@ class AtomicOrbital {
         loop.stop();
     }
 
-    changeIntersector(value) {
-        planar.position.set(0, 0, value);
-        updatePanel(value);
+    init() {
+        this.clear();
+        const orbitals = createOrbitals(orbital);
+        allMesh = orbitals.meshArr;
+        intersector = (orbitals.minimum + orbitals.maximum) / 2;
+        allMesh.forEach(mesh => {
+            loop.updatables.push(mesh);
+            scene.add(mesh);
+        });
+        let settings = {
+            intersector:{
+                min: orbitals.minimum,
+                max: orbitals.maximum,
+                event: this.changeIntersector
+            },
+            orbital:{
+                data: [0,1,2,3],
+                event: value => this.changeOrbital(value)
+            }
+        };
+        createSetting(settings);
+        planar = createPlanar(intersector);
+        scene.add(planar);
     }
+
+    clear(){
+        scene.remove(planar);
+        if (allMesh && allMesh.length !== 0) allMesh.forEach(mesh => scene.remove(mesh));
+    }
+
+    changeIntersector(value) {
+        intersector = value;
+        planar.position.set(0, 0, intersector);
+        updateIntersection(intersector, regions);
+    }
+
+    changeOrbital(value) {
+        orbital = value;
+        this.init();
+        regions = getRegions(orbital);
+        updateIntersection(intersector, regions);
+    }
+
 }
 
 export { AtomicOrbital };
