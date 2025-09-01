@@ -65,13 +65,16 @@ function drag(elem) {
 
 function collapse(elem) {
     let panel = elem.nextElementSibling, firstChild = elem.firstElementChild;
-    panel.style.maxHeight = panel.scrollHeight + "px";
+    panel.style.maxHeight = 40 + panel.scrollHeight + "px";
+    panel.style.height = 40 + panel.scrollHeight + "px";
     firstChild.addEventListener("click", function () {
         if (panel.style.maxHeight) {
             firstChild.setAttribute('data-before', '▸');
             panel.style.maxHeight = null;
+            panel.style.height = null;
         } else {
-            panel.style.maxHeight = panel.scrollHeight + "px";
+            panel.style.maxHeight = panel.scrollHeight + 40 + "px";
+            panel.style.height = panel.scrollHeight + 40 + "px";
             firstChild.setAttribute('data-before', '▾');
         }
     });
@@ -122,7 +125,7 @@ function updateIntersection(intersector, regions) {
                 if (coordinates[i].z >= intersector)
                     break;
             }
-            createCrossSection(points, svg, "blue");  
+            createCrossSection(points, svg, "#e91010");  
         }
         else {
             let n = 100;
@@ -141,7 +144,7 @@ function updateIntersection(intersector, regions) {
                 for (var j = 0; j <= n; j++) {
                     points.push([coordinates.arr1[index][0] * Math.cos(j * 2 * Math.PI / n), coordinates.arr1[index][0] * Math.sin(j * 2 * Math.PI / n)]);
                 }
-                createCrossSection(points, svg, "red");
+                createCrossSection(points, svg, "#05bbbb");
                 
                 points = [];
                 index = coordinates.arr2.findIndex(m => m[1] >= intersector);
@@ -149,7 +152,7 @@ function updateIntersection(intersector, regions) {
                     points.push([coordinates.arr2[index][0] * Math.cos(j * 2 * Math.PI / n), coordinates.arr2[index][0] * Math.sin(j * 2 * Math.PI / n)]);
                 }
             }
-            createCrossSection(points, svg, "red");  
+            createCrossSection(points, svg, "#05bbbb");  
         }         
     });
 }
