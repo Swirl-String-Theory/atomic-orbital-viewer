@@ -1,35 +1,15 @@
 import { orbitals } from "../data/orbital-data";
 import { getRegions } from "./orbitals";
 
-let origin;
+let origin, contentWidth = 200, contentHeight = 200;
 
 function createIntersection(title, intersector, regions) {
-    let { panel, header } = init(title);
+    const panel = document.getElementById("panel");
+    const header = document.querySelector("#panel > .panel-header");
+    drag(panel);
     createContent(panel, intersector, regions);
     collapse(header);
     return panel;
-}
-
-function init(title) {
-    const container = document.querySelector('#scene-container');
-    const panel = document.createElement("div");
-    panel.setAttribute("class", "panel");
-    container.insertBefore(panel, container.firstChild)
-    const header = document.createElement("div");
-    header.setAttribute("class", "panel-header");
-    panel.appendChild(header);
-    const text = document.createElement("span");
-    text.textContent = title;
-    header.appendChild(text);
-    text.setAttribute('data-before', '▸');
-    const dragElem = document.createElement("div");
-    dragElem.setAttribute("class", "draggable");
-    header.appendChild(dragElem);
-    drag(panel);
-    const content = document.createElement("div");
-    content.setAttribute("class", "panel-content");
-    panel.appendChild(content);
-    return { panel, header };
 }
 
 function drag(elem) {
@@ -47,14 +27,13 @@ function drag(elem) {
     }
 
     function drag_mm(e) {
-        e = e || window.event;
         e.preventDefault();
         pos1 = pos3 - e.clientX;
         pos2 = pos4 - e.clientY;
         pos3 = e.clientX;
         pos4 = e.clientY;
-        elem.style.top = (elem.offsetTop - pos2) + "px";
-        elem.style.left = (elem.offsetLeft - pos1) + "px";
+        elem.style.top = (parseFloat(elem.style.top) - pos2) + "px";
+        elem.style.left = (parseFloat(elem.style.left) - pos1) + "px";
     }
 
     function drag_mu() {
@@ -64,17 +43,14 @@ function drag(elem) {
 }
 
 function collapse(elem) {
-    let panel = elem.nextElementSibling, firstChild = elem.firstElementChild;
-    panel.style.maxHeight = 40 + panel.scrollHeight + "px";
-    panel.style.height = 40 + panel.scrollHeight + "px";
+    let panelContent = elem.nextElementSibling, firstChild = elem.firstElementChild;
+    panelContent.style.height = panelContent.style.width = contentHeight + "px";
     firstChild.addEventListener("click", function () {
-        if (panel.style.maxHeight) {
+        if (panelContent.style.height === contentHeight + "px") {
             firstChild.setAttribute('data-before', '▸');
-            panel.style.maxHeight = null;
-            panel.style.height = null;
+            panelContent.style.height = "0px";
         } else {
-            panel.style.maxHeight = panel.scrollHeight + 40 + "px";
-            panel.style.height = panel.scrollHeight + 40 + "px";
+            panelContent.style.height = contentHeight + "px";
             firstChild.setAttribute('data-before', '▾');
         }
     });
@@ -82,14 +58,14 @@ function collapse(elem) {
 
 function createContent(elem, intersector, regions) {
     let content = elem.getElementsByClassName("panel-content")[0];
-    let svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    let svg = content.getElementsByTagNameNS('http://www.w3.org/2000/svg', 'svg')[0];
     content.appendChild(svg);
     origin = createAxis(svg);
     updateIntersection(intersector, regions);
 }
 
 function createAxis(svg) {
-    let height = svg.clientHeight - 10, width = svg.clientWidth - 10;
+    let height = contentHeight - 10, width = contentWidth - 10;
     createLine(svg, width / 2, '5', width / 2, height, 'green', 'y');
     createLine(svg, width / 2, '5', width / 2 + 5, '10', 'green', 'y1');
     createLine(svg, width / 2, '5', width / 2 - 5, '10', 'green', 'y2');
