@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { orbitals } from '../data/orbital-data';
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
+import { LoopSubdivision } from 'three-subdivide';
 
 function createOrbitals(value) {
     let orbital = orbitals[value], regions = orbital.regions, minimum = orbital.minimum, maximum = orbital.maximum;
@@ -17,6 +18,7 @@ function createOrbitals(value) {
 
             });
             geometry = new ConvexGeometry(points);
+            geometry = LoopSubdivision.modify(geometry, 2);
         }
         else if (!region.isConvex) {
             if (region.coordinates) region.coordinates.forEach(c => points.push(new THREE.Vector2(c[0], c[1])));
@@ -36,7 +38,6 @@ function createOrbitals(value) {
     });
     return { meshArr, minimum, maximum };
 }
-
 
 function getRegions(selectedOrbital) {
     let orbital = orbitals[selectedOrbital], regions = [];

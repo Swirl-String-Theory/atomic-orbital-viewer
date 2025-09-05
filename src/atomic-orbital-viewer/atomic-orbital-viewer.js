@@ -12,7 +12,7 @@ import { createPlanar } from './components/planar.js';
 import { createSetting } from './components/settings.js';
 import { createIntersection, updateIntersection } from "./components/intersection.js";
 
-let camera, renderer, scene, loop, axis, planar, allMesh, orbital = 0, intersection, intersector, regions;
+let camera, renderer, scene, loop, axis, planar, allMesh, orbital = 3, intersection, intersector, regions;
 
 class AtomicOrbital {
     constructor(container) {
