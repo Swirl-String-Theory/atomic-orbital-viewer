@@ -10,9 +10,9 @@ import { createAxis } from './components/axis.js';
 import { createOrbitals, getRegions } from './components/orbitals.js';
 import { createPlanar } from './components/planar.js';
 import { createSetting } from './components/settings.js';
-import { createIntersection, updateIntersection } from "./components/intersection.js";
+import Intersection from "./components/intersection.js";
 
-let camera, renderer, scene, loop, axis, planar, allMesh, orbital = 0, intersection, intersector, regions;
+let camera, renderer, scene, loop, axis, planar, allMesh, orbital = 3, intersection, intersector, regions;
 
 class AtomicOrbital {
     constructor(container) {
@@ -30,7 +30,8 @@ class AtomicOrbital {
         const resizer = new Resizer(container, camera, renderer);
         this.init();    
         regions = getRegions(orbital);
-        intersection = createIntersection('Intersection', intersector, regions);
+        intersection = new Intersection(regions);
+        intersection.create(intersector);
     }
     render() {
         renderer.render(scene, camera);
@@ -76,14 +77,14 @@ class AtomicOrbital {
     changeIntersector(value) {
         intersector = value;
         planar.position.set(0, 0, intersector);
-        updateIntersection(intersector, regions);
+        intersection.update(intersector);
     }
 
     changeOrbital(value) {
         orbital = value;
         this.init();
         regions = getRegions(orbital);
-        updateIntersection(intersector, regions);
+        intersection.update(intersector);
     }
 
 }

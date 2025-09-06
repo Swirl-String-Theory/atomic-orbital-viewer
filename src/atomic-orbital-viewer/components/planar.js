@@ -12,7 +12,7 @@ function createPlanar(z) {
 
     const polygon = new THREE.Shape(points);
     const geometry = new THREE.ShapeGeometry(polygon);
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide, transparent: true, opacity: .4 });
+    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide, transparent: true, opacity: .2 });
     const mesh = new THREE.Mesh(geometry, material);
 
     mesh.position.set(0, 0, z);
