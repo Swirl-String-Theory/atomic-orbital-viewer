@@ -1,3 +1,5 @@
+import * as THREE from 'three';
+
 class Intersection {
 
     constructor(regions) {
@@ -6,12 +8,13 @@ class Intersection {
     }
 
     create(z) {
-        this.z = z;
         const panel = document.getElementById("panel");
         const header = document.querySelector("#panel > .panel-header");
+        this.createPlane();
         this.draggable(panel);
         this.createContent(panel);
         this.collapsible(header);
+        this.update(z);
     }
 
     draggable(elem) {
@@ -71,7 +74,6 @@ class Intersection {
         let svg = content.getElementsByTagNameNS('http://www.w3.org/2000/svg', 'svg')[0];
         content.appendChild(svg);
         this.createAxis(svg);
-        this.update(this.z);
     }
 
     createAxis(svg) {
@@ -97,7 +99,7 @@ class Intersection {
     }
 
     update(z) {
-        this.z = z;
+        this.plane.position.set(0, 0, z);
         let points = [];
         let svg = document.getElementsByTagName('svg')[0];
         let paths = [...document.getElementsByTagName("path")];   
@@ -158,6 +160,23 @@ class Intersection {
         path.setAttribute("fill", "transparent");
         path.setAttribute('d', pathD);
         svg.appendChild(path);
+    }
+
+    createPlane() {
+        let points = [];
+        const coordinates = [[5, 5, 0], [-5, 5, 0], [-5, -5, 0], [5, -5, 0]];
+        function addPoints(point) {
+            points.push(new THREE.Vector3(...point));
+        }
+    
+        for (let i = 0; i < coordinates.length; i++) {
+            addPoints(coordinates[i])
+        }
+    
+        const polygon = new THREE.Shape(points);
+        const geometry = new THREE.ShapeGeometry(polygon);
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide, transparent: true, opacity: .2 });
+        this.plane = new THREE.Mesh(geometry, material);
     }
 }
 
