@@ -43,16 +43,15 @@ function getRegions(selectedOrbital) {
     let orbital = orbitals[selectedOrbital], regions = [];
     orbital.regions.forEach(region => {
         if (region.isConvex)
-            regions.push({ coordinates: region.coordinates, isConvex: region.isConvex });
+            regions.push({ coordinates: region.coordinates, isConvex: region.isConvex, color: region.color });
         else {
             let coordinates = region.coordinates;
-            coordinates.pop();
             let minZ = Math.min(...coordinates.map(c => c[1])), maxZ = Math.max(...coordinates.map(c => c[1]));
             let indexMinZ = coordinates.findIndex(c => c[1] === minZ), indexMaxZ = coordinates.findIndex(c => c[1] === maxZ);
             let arr1 = coordinates.slice(indexMinZ, indexMaxZ + 1);
             let arr2 = [...coordinates.slice(indexMaxZ, coordinates.length), ...coordinates.slice(0, indexMinZ + 1)];
             arr2.reverse();
-            regions.push({ coordinates: { arr1: arr1, arr2: arr2, minZ: minZ, maxZ: maxZ, indexMinZ: indexMinZ, indexMaxZ: indexMaxZ }, isConvex: region.isConvex });
+            regions.push({ coordinates: { arr1: arr1, arr2: arr2, minZ: minZ, maxZ: maxZ, indexMinZ: indexMinZ, indexMaxZ: indexMaxZ }, isConvex: region.isConvex, color: region.color });
         }
     });
     return regions;

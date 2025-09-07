@@ -113,7 +113,7 @@ class Intersection {
                     if (coordinates[i].z >= z)
                         break;
                 }
-                this.createCrossSection(points, svg, "#e91010");  
+                this.createCrossSection(points, svg, region.color);  
             }
             else {
                 let n = 100;
@@ -132,7 +132,7 @@ class Intersection {
                     for (var j = 0; j <= n; j++) {
                         points.push([coordinates.arr1[index][0] * Math.cos(j * 2 * Math.PI / n), coordinates.arr1[index][0] * Math.sin(j * 2 * Math.PI / n)]);
                     }
-                    this.createCrossSection(points, svg, "#05bbbb");
+                    this.createCrossSection(points, svg, region.color);
                     
                     points = [];
                     index = coordinates.arr2.findIndex(m => m[1] >= z);
@@ -140,7 +140,7 @@ class Intersection {
                         points.push([coordinates.arr2[index][0] * Math.cos(j * 2 * Math.PI / n), coordinates.arr2[index][0] * Math.sin(j * 2 * Math.PI / n)]);
                     }
                 }
-                this.createCrossSection(points, svg, "#05bbbb");  
+                this.createCrossSection(points, svg, region.color);  
             }         
         });
     }
