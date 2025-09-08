@@ -5,10 +5,9 @@ import math
 def equation(r, costeta):
     return np.exp(-5 * r/2) * 125 * r ** 3 * (5* costeta ** 3 - 3 * costeta) + 1
 
-costeta_0 = math.sqrt(0.6)
-costeta_1 = 0
+costeta_0 = 0.7586068664
+costeta_1 = 0.031046072329
 costeta_values = np.linspace(costeta_0, costeta_1, 50)
-costeta_values = costeta_values[:-1]
 pairs = []
 
 r_initial_guess = 0.001
