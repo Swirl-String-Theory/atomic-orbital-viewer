@@ -2,9 +2,8 @@ import mpmath as mp
 
 f=lambda r: 2*(125*r**3)*mp.e**(-5*r/2)-1
 
-# find maxima to know number of roots
 df=lambda r: mp.diff(f, r)
-# scan for sign changes
+
 roots=set()
 for a in [i*0.1 for i in range(0,1001)]:
     b=a+0.1

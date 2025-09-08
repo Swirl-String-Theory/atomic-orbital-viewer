@@ -7,16 +7,13 @@ def equation(r, z):
 
 z_first = 0.185236208518
 z_last = 3.815456860802
-# Generate 50 evenly spaced values for z
 z_values = np.linspace(z_first, z_last, 50)
 z_values = z_values[1:-1]
 pairs = []
 str_pairs = ''
 
 for z in z_values:
-    # Use a numerical solver to find x
     try:
-        # Initial guess for x
         r_initial_guess = z
         r_solution = opt.fsolve(equation, r_initial_guess, args=(z,))
         x_solution = np.sqrt(r_solution**2 - z**2)

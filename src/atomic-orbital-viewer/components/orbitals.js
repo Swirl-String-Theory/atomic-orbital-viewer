@@ -45,7 +45,8 @@ function getRegions(selectedOrbital) {
         if (region.isConvex)
             regions.push({ coordinates: region.coordinates, isConvex: region.isConvex, color: region.color });
         else {
-            let coordinates = region.coordinates;
+            let coordinates = [...region.coordinates];
+            if(region.closed) coordinates.pop();
             let minZ = Math.min(...coordinates.map(c => c[1])), maxZ = Math.max(...coordinates.map(c => c[1]));
             let indexMinZ = coordinates.findIndex(c => c[1] === minZ), indexMaxZ = coordinates.findIndex(c => c[1] === maxZ);
             let arr1 = coordinates.slice(indexMinZ, indexMaxZ + 1);
