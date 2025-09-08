@@ -7,7 +7,7 @@ import { createCamera } from './components/camera.js';
 import { createScene } from './components/scene.js';
 import { createLights } from './components/lights.js';
 import { createAxis } from './components/axis.js';
-import { createOrbitals, getRegions } from './components/orbitals.js';
+import OrbitalBuilder from './components/orbital-builder.js';
 import { createSetting } from './components/settings.js';
 import Intersection from "./components/intersection.js";
 
@@ -17,8 +17,9 @@ class OrbitalViewer {
         this.scene = createScene();
         this.renderer = createRenderer();
         this.loop = new Loop(this.camera, this.scene, this.renderer);
-        this.orbital = 3;
-        this.regions = getRegions(this.orbital);
+        this.orbitalInx = 3;
+        this.orbitalBuilder = new OrbitalBuilder(this.orbitalInx);
+        this.regions = this.orbitalBuilder.getRegions();
         this.intersection = new Intersection(this.regions);
         container.append(this.renderer.domElement);
         let axis = createAxis();
@@ -42,22 +43,22 @@ class OrbitalViewer {
     }
 
     init() {
-        const orbitals = createOrbitals(this.orbital);
-        this.allMesh = orbitals.meshArr;
-        let intersectorZ = (orbitals.minimum + orbitals.maximum) / 2;
+        const orbital = this.orbitalBuilder.createOrbital(this.orbitalInx);
+        this.allMesh = orbital.meshArr;
+        let intersectorZ = (orbital.minimum + orbital.maximum) / 2;
         this.allMesh.forEach(mesh => {
             this.loop.updatables.push(mesh);
             this.scene.add(mesh);
         });
         let settings = {
             intersector:{
-                min: orbitals.minimum,
-                max: orbitals.maximum,
+                min: orbital.minimum,
+                max: orbital.maximum,
                 event: val => this.changeIntersector(val)
             },
             orbital:{
                 data: [0,1,2,3],
-                current: this.orbital,
+                current: this.orbitalInx,
                 intersector: intersectorZ,
                 event: val => this.changeOrbital(val)
             }
@@ -78,8 +79,9 @@ class OrbitalViewer {
 
     changeOrbital(value) {
         this.clear();
-        this.orbital = value;
-        this.regions = getRegions(this.orbital);
+        this.orbitalInx = value;
+        this.orbitalBuilder = new OrbitalBuilder(this.orbitalInx);
+        this.regions = this.orbitalBuilder.getRegions();
         this.intersection = new Intersection(this.regions);
         this.init();
     }
