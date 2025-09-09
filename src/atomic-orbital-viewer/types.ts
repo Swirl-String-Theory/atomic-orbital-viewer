@@ -1,0 +1,22 @@
+import { CrudeRegion } from "./components/component";
+
+export type Orbital = {
+    minimum: number;
+    maximum: number;
+    _regions: CrudeRegion[];
+    regions: OrbitalRegion[];
+};
+
+export type OrbitalRegion = {
+    coordinates?: { z: number; points: [number, number][] }[];
+    xzCoordinates?: {
+        pointsSide1: [number, number][];
+        pointsSide2: [number, number][];
+        minZ: number;
+        maxZ: number;
+        indexMinZ: number;
+        indexMaxZ: number;
+    };
+    isConvex: boolean;
+    color: string;
+};

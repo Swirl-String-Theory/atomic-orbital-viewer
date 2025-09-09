@@ -1,23 +1,36 @@
 
-import { createRenderer } from './systems/renderer.js';
-import { Resizer } from './systems/Resizer.js';
-import { Loop } from './systems/Loop.js';
-import { createOrbitControls } from './systems/orbit-controls.js';
-import { createCamera } from './components/camera.js';
-import { createScene } from './components/scene.js';
-import { createLights } from './components/lights.js';
-import { createAxis } from './components/axis.js';
-import OrbitalBuilder from './components/orbital-builder.js';
-import { createSetting } from './components/settings.js';
-import Intersection from "./components/intersection.js";
+import * as THREE from 'three';
+import { createRenderer } from './systems/renderer';
+import { Resizer } from './systems/resizer';
+import { Loop } from './systems/Loop';
+import { createOrbitControls } from './systems/orbit-controls';
+import { createCamera } from './components/camera';
+import { createScene } from './components/scene';
+import { createLights } from './components/lights';
+import { createAxis } from './components/axis';
+import OrbitalBuilder from './components/orbital-builder';
+import { createSetting } from './components/settings';
+import Intersection from "./components/intersection";
+import { PerspectiveCamera, Scene, WebGLRenderer } from 'three';
+import { OrbitalRegion } from './types';
 
 class OrbitalViewer {
+    camera: PerspectiveCamera;
+    scene: Scene;
+    renderer: WebGLRenderer;
+    loop: Loop;
+    orbitalInx: number;
+    orbitalBuilder: OrbitalBuilder;
+    regions: OrbitalRegion[];
+    intersection: Intersection;
+    meshes: THREE.Mesh[];
+
     constructor(container) {
         this.camera = createCamera();
         this.scene = createScene();
         this.renderer = createRenderer();
         this.loop = new Loop(this.camera, this.scene, this.renderer);
-        this.orbitalInx = 3;
+        this.orbitalInx = 1;
         this.orbitalBuilder = new OrbitalBuilder(this.orbitalInx);
         this.regions = this.orbitalBuilder.getRegions();
         this.intersection = new Intersection(this.regions);
@@ -43,13 +56,10 @@ class OrbitalViewer {
     }
 
     init() {
-        const orbital = this.orbitalBuilder.createOrbital(this.orbitalInx);
-        this.allMesh = orbital.meshArr;
+        const orbital = this.orbitalBuilder.createOrbital();
+        this.meshes = orbital.meshes;
         let intersectorZ = (orbital.minimum + orbital.maximum) / 2;
-        this.allMesh.forEach(mesh => {
-            this.loop.updatables.push(mesh);
-            this.scene.add(mesh);
-        });
+        this.meshes.forEach(mesh => this.scene.add(mesh));
         let settings = {
             intersector:{
                 min: orbital.minimum,
@@ -57,7 +67,7 @@ class OrbitalViewer {
                 event: val => this.changeIntersector(val)
             },
             orbital:{
-                data: [0,1,2,3],
+                data: [0,1],
                 current: this.orbitalInx,
                 intersector: intersectorZ,
                 event: val => this.changeOrbital(val)
@@ -70,7 +80,7 @@ class OrbitalViewer {
 
     clear(){
         this.scene.remove(this.intersection.plane);
-        this.allMesh?.forEach(mesh => this.scene.remove(mesh));
+        this.meshes?.forEach(mesh => this.scene.remove(mesh));
     }
 
     changeIntersector(value) {
