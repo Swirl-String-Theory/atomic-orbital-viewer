@@ -1,4 +1,4 @@
-import { Orbital } from "../components/component";
+import { Orbital } from "../types";
 
 export const orbitals: Orbital[] = [
     {
@@ -75,8 +75,8 @@ export const orbitals: Orbital[] = [
         ]
     },
     {
-        minimum: -4.5,
-        maximum: 4.5,
+        minimum: -5,
+        maximum: 5,
         regions: [],
         _regions: [
             {

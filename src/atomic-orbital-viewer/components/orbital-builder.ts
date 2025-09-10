@@ -7,22 +7,21 @@ import { Orbital, OrbitalRegion } from '../types';
 
 class OrbitalBuilder
 {
-    orbital: Orbital;
-    regions: OrbitalRegion[];
+    current: Orbital;
     constructor(selectedIndex: number)
     {
-        this.orbital = orbitals[selectedIndex];
-        this.regions = [];
-        this.orbital._regions.forEach(region => {
+        this.current = orbitals[selectedIndex];
+        this.current.regions = [];
+        this.current._regions.forEach(region => {
             if (region.mirrorRegionInx !== undefined) {
-                let mirror = this.orbital._regions[region.mirrorRegionInx];
+                let mirror = this.current._regions[region.mirrorRegionInx];
                 region.closed = mirror.closed;
                 region.xzCoordinates = [...mirror.xzCoordinates!].map(p => ([p[0], -p[1]]));
                 region.xzCoordinates.reverse();
             }
 
             if (region.isConvex)
-                this.regions.push({ coordinates: region.coordinates, isConvex: region.isConvex, color: region.color });
+                this.current.regions.push({ coordinates: region.coordinates, isConvex: region.isConvex, color: region.color });
             else {
                 let coordinates = [...region.xzCoordinates!];
                 if(region.closed) coordinates.pop();
@@ -31,13 +30,13 @@ class OrbitalBuilder
                 let pointsSide1 = coordinates.slice(indexMinZ, indexMaxZ + 1);
                 let pointsSide2 = [...coordinates.slice(indexMaxZ, coordinates.length), ...coordinates.slice(0, indexMinZ + 1)];
                 pointsSide2.reverse();
-                this.regions.push({ xzCoordinates: { pointsSide1, pointsSide2, minZ, maxZ, indexMinZ, indexMaxZ }, isConvex: region.isConvex, color: region.color });
+                this.current.regions.push({ xzCoordinates: { pointsSide1, pointsSide2, minZ, maxZ, indexMinZ, indexMaxZ }, isConvex: region.isConvex, color: region.color });
             }
         });
     }
 
     createOrbital() {
-        let regions = this.orbital._regions, minimum = this.orbital.minimum, maximum = this.orbital.maximum;
+        let regions = this.current._regions, minimum = this.current.minimum, maximum = this.current.maximum;
         let meshes: THREE.Mesh[] = [], geometry;
         regions.forEach(region => {
             let points: (THREE.Vector2 | THREE.Vector3)[] = [];
@@ -70,10 +69,6 @@ class OrbitalBuilder
             meshes.push(mesh);
         });
         return { meshes, minimum, maximum };
-    }
-
-    getRegions() {
-        return this.regions;
     }
 }
 export default OrbitalBuilder

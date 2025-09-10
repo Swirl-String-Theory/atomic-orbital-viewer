@@ -12,28 +12,26 @@ import OrbitalBuilder from './components/orbital-builder';
 import { createSetting } from './components/settings';
 import Intersection from "./components/intersection";
 import { PerspectiveCamera, Scene, WebGLRenderer } from 'three';
-import { OrbitalRegion } from './types';
+import { Orbital } from './types';
 
 class OrbitalViewer {
     camera: PerspectiveCamera;
     scene: Scene;
     renderer: WebGLRenderer;
     loop: Loop;
-    orbitalInx: number;
+    orbitalInx: number = 1;
     orbitalBuilder: OrbitalBuilder;
-    regions: OrbitalRegion[];
+    orbital: Orbital;
     intersection: Intersection;
     meshes: THREE.Mesh[];
 
-    constructor(container) {
+    constructor(container: HTMLElement) {
         this.camera = createCamera();
         this.scene = createScene();
         this.renderer = createRenderer();
         this.loop = new Loop(this.camera, this.scene, this.renderer);
-        this.orbitalInx = 1;
         this.orbitalBuilder = new OrbitalBuilder(this.orbitalInx);
-        this.regions = this.orbitalBuilder.getRegions();
-        this.intersection = new Intersection(this.regions);
+        this.intersection = new Intersection(this.orbitalBuilder.current);
         container.append(this.renderer.domElement);
         let axis = createAxis();
         const orbitControls = createOrbitControls(this.camera, this.renderer.domElement);
@@ -64,17 +62,17 @@ class OrbitalViewer {
             intersector:{
                 min: orbital.minimum,
                 max: orbital.maximum,
-                event: val => this.changeIntersector(val)
+                event: (val: number) => this.changeIntersector(val)
             },
             orbital:{
                 data: [0,1],
                 current: this.orbitalInx,
                 intersector: intersectorZ,
-                event: val => this.changeOrbital(val)
+                event: (val: number) => this.changeOrbital(val)
             }
         };
         createSetting(settings);
-        this.intersection.create(intersectorZ);
+        this.intersection.update(intersectorZ);
         this.scene.add(this.intersection.plane);
     }
 
@@ -83,16 +81,15 @@ class OrbitalViewer {
         this.meshes?.forEach(mesh => this.scene.remove(mesh));
     }
 
-    changeIntersector(value) {
+    changeIntersector(value: number) {
         this.intersection.update(value);
     }
 
-    changeOrbital(value) {
+    changeOrbital(value: number) {
         this.clear();
         this.orbitalInx = value;
         this.orbitalBuilder = new OrbitalBuilder(this.orbitalInx);
-        this.regions = this.orbitalBuilder.getRegions();
-        this.intersection = new Intersection(this.regions);
+        this.intersection.orbitalChanged(this.orbitalBuilder.current);
         this.init();
     }
 }
