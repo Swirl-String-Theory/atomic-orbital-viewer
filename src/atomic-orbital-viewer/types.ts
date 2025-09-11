@@ -15,9 +15,8 @@ export type OrbitalRegion = {
         pointsSide2: [number, number][];
         minZ: number;
         maxZ: number;
-        indexMinZ: number;
-        indexMaxZ: number;
     };
     isConvex: boolean;
     color: string;
+    closed: boolean;
 };

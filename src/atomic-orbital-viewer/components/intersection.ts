@@ -80,8 +80,8 @@ class Intersection extends Panel {
         let paths = [...document.getElementsByClassName("cross-section")];
         paths.forEach(path => svg.removeChild(path));
         this.orbital.regions.forEach(region => {
-            points = [];
             if (region.isConvex) {
+                points = [];
                 let coordinates = region.coordinates!;
                 for (var i = 0; i < coordinates.length; i++) {
                     points = coordinates[i].points;
@@ -91,35 +91,35 @@ class Intersection extends Panel {
                 this.createCrossSection(points, svg, region.color);  
             }
             else {
-                let n = 100;
                 let coordinates = region.xzCoordinates!;
-                if (z === coordinates.minZ) {
-                    for (var j = 0; j <= n; j++) {
-                        points.push([coordinates.pointsSide1[coordinates.indexMinZ][0] * Math.cos(j * 2 * Math.PI / n), coordinates.pointsSide1[coordinates.indexMinZ][0] * Math.sin(j * 2 * Math.PI / n)]);
-                    }
-                }
-                else if (z === coordinates.maxZ) {
-                    for (var j = 0; j <= n; j++) {
-                        points.push([coordinates.pointsSide2[coordinates.indexMaxZ][0] * Math.cos(j * 2 * Math.PI / n), coordinates.pointsSide2[coordinates.indexMaxZ][0] * Math.sin(j * 2 * Math.PI / n)]);
-                    }
-                }
-                else if(z > coordinates.minZ && z < coordinates.maxZ){
-                    let index = coordinates.pointsSide1.findIndex(m => m[1] >= z);
-                    for (var j = 0; j <= n; j++) {
-                        points.push([coordinates.pointsSide1[index][0] * Math.cos(j * 2 * Math.PI / n), coordinates.pointsSide1[index][0] * Math.sin(j * 2 * Math.PI / n)]);
-                    }
+                if(z >= coordinates.minZ && z <= coordinates.maxZ){
+                    points = this.getCirclePoints(coordinates.pointsSide1, z)
                     this.createCrossSection(points, svg, region.color);
-                    points = [];
-                    index = coordinates.pointsSide2.findIndex(m => m[1] >= z);
-                    for (var j = 0; j <= n; j++) {
-                        points.push([coordinates.pointsSide2[index][0] * Math.cos(j * 2 * Math.PI / n), coordinates.pointsSide2[index][0] * Math.sin(j * 2 * Math.PI / n)]);
+                    if(region.closed) {
+                        points = this.getCirclePoints(coordinates.pointsSide2, z)
+                        this.createCrossSection(points, svg, region.color); 
                     }
-                }
-                this.createCrossSection(points, svg, region.color);  
+                } 
             }         
         });
         this.probability.setZ(z);
         this.probability.update();
+    }
+
+    getCirclePoints(points: [number, number][], z: number) {
+        let n = 100;
+        let cilclePoints: [number, number][] = [];
+        let index = points.findIndex(m => m[1] >= z);
+        let p1 = points[index];
+        let x = p1[0];
+        if(index > 0) {
+            let p0 = points[index - 1];
+            x = p0[0] + (p1[0] - p0[0]) * (z - p0[1]) / (p1[1] - p0[1])
+        }
+        for (var j = 0; j <= n; j++) {
+            cilclePoints.push([x * Math.cos(j * 2 * Math.PI / n), x * Math.sin(j * 2 * Math.PI / n)]);
+        }
+        return cilclePoints;
     }
 
     createCrossSection(points: [number, number][], svg: SVGSVGElement, color: string) {

@@ -21,16 +21,20 @@ class OrbitalBuilder
             }
 
             if (region.isConvex)
-                this.current.regions.push({ coordinates: region.coordinates, isConvex: region.isConvex, color: region.color });
+                this.current.regions.push({ coordinates: region.coordinates, isConvex: region.isConvex, color: region.color, closed: true });
             else {
-                let coordinates = [...region.xzCoordinates!];
-                if(region.closed) coordinates.pop();
+                let coordinates = [...region.xzCoordinates!], pointsSide1: [number, number][], pointsSide2: [number, number][];
                 let minZ = Math.min(...coordinates.map(c => c[1])), maxZ = Math.max(...coordinates.map(c => c[1]));
-                let indexMinZ = coordinates.findIndex(c => c[1] === minZ), indexMaxZ = coordinates.findIndex(c => c[1] === maxZ);
-                let pointsSide1 = coordinates.slice(indexMinZ, indexMaxZ + 1);
-                let pointsSide2 = [...coordinates.slice(indexMaxZ, coordinates.length), ...coordinates.slice(0, indexMinZ + 1)];
-                pointsSide2.reverse();
-                this.current.regions.push({ xzCoordinates: { pointsSide1, pointsSide2, minZ, maxZ, indexMinZ, indexMaxZ }, isConvex: region.isConvex, color: region.color });
+                if(region.closed) {
+                    coordinates.pop();
+                    let indexMinZ = coordinates.findIndex(c => c[1] === minZ), indexMaxZ = coordinates.findIndex(c => c[1] === maxZ);
+                    pointsSide1 = coordinates.slice(indexMinZ, indexMaxZ + 1);
+                    pointsSide2 = [...coordinates.slice(indexMaxZ, coordinates.length), ...coordinates.slice(0, indexMinZ + 1)];
+                    pointsSide2.reverse();
+                }
+                else pointsSide1 = coordinates;
+                let {isConvex, color, closed } = region;
+                this.current.regions.push({ xzCoordinates: { pointsSide1, pointsSide2, minZ, maxZ }, isConvex, color, closed });
             }
         });
     }
