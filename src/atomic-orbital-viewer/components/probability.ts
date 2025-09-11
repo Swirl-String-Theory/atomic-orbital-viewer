@@ -6,9 +6,10 @@ import Util from './util';
 export class Probability extends Panel {
     y: number = null;
     z: number = null;
+    padding = 10;
 
     constructor(public orbital: Orbital) {
-        super(true, 400, 200);
+        super(false, 400, 200);
         
         const panel = document.getElementById("probability")!;
         const header = document.querySelector("#probability > .panel-header")! as HTMLElement;
@@ -18,7 +19,7 @@ export class Probability extends Panel {
     }
     createContent(elem: HTMLElement) {
         let svg = elem.getElementsByTagNameNS('http://www.w3.org/2000/svg', 'svg')[0];
-        Util.createAxis(svg, this.contentHeight, this.contentWidth, 10, 'orange', 'darkgray', false);
+        Util.createAxis(svg, this.contentHeight, this.contentWidth, this.padding, 'orange', 'darkgray', false);
     }
 
     setY(y: number) {
@@ -30,7 +31,20 @@ export class Probability extends Panel {
     }
 
     update() {
-        console.log(this.y + '  ' + this.z)
+        let svg = document.querySelector('#probability svg');
+        let elems = svg.querySelectorAll('.distribution');
+        elems.forEach(elem => svg.removeChild(elem));
+        let n = 100, points: [number, number][] = [], pathD = "M",
+            origin = { x: this.padding, y: this.contentHeight - this.padding };
+        for (var i = 0; i < n; i++) {
+            let x = i * this.orbital.maximumXY / n, distance = i * (this.contentWidth - 2 * this.padding) / n;
+            let probability = this.orbital.probability(x, this.y, this.z);
+            points.push([origin.x + distance, origin.y - probability * (this.contentHeight - 2 * this.padding)])
+        }
+
+        points.forEach(point => pathD += point[0] + "," + point[1] + "L");
+        pathD = pathD .substring(0, pathD.length - 1);
+        svg.appendChild(Util.createPath(pathD, 'darkgray', 'distribution'));
     }
 
     moveDown(height: number, width: number) {

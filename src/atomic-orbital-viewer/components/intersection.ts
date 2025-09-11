@@ -9,8 +9,7 @@ class Intersection extends Panel {
     probability: Probability;
     padding = 5;
     constructor(public orbital: Orbital) {
-        super(true, 300, 300);
-        this.plane = null;
+        super(false, 300, 300);
         this.probability = new Probability(orbital);
         
         const panel = document.getElementById("intersection")!;
@@ -19,10 +18,13 @@ class Intersection extends Panel {
         this.draggable(panel);
         this.createContent(panel);
         this.collapsible(header);
+        if(!this.collapsed) this.onOpen();
     }
 
-    orbitalChanged(regions: Orbital) {
-        this.orbital = regions;
+    orbitalChanged(orbital: Orbital) {
+        this.orbital = orbital;
+        this.probability.orbital = orbital;
+        this.createPlane();
     }
 
     createContent(elem: HTMLElement) {
@@ -32,7 +34,7 @@ class Intersection extends Panel {
     }
 
     createCrossLine(svg: SVGElement) {
-        let height = (this.contentHeight - 2 * this.padding) / 4 + this.padding, width = this.contentWidth - 2 * this.padding - 26;
+        let height = (this.contentHeight - 2 * this.padding) / 2 + this.padding, width = this.contentWidth - 2 * this.padding - 26;
         var icon = svg.querySelector('#move-icon')! as SVGGElement;
         this.setProbabilityY(height);
         var crossLine = Util.createLine(svg, this.padding, height, width, height, 'darkgray', 'cross-line', 1.5);
@@ -67,14 +69,14 @@ class Intersection extends Panel {
     }
 
     setProbabilityY(height: number) {
-        let y = this.orbital.maximum * (this.contentHeight / 2 - height) / (this.contentHeight / 2 - this.padding);
+        let y = this.orbital.maximumXY * (this.contentHeight / 2 - height) / (this.contentHeight / 2 - this.padding);
         this.probability.setY(y);
     }
 
     update(z: number) {
         this.plane!.position.set(0, 0, z);
         let points: [number, number][] = [];
-        let svg = document.getElementsByTagName('svg')[0];
+        let svg = document.querySelector('#intersection svg') as SVGSVGElement;
         let paths = [...document.getElementsByClassName("cross-section")];
         paths.forEach(path => svg.removeChild(path));
         this.orbital.regions.forEach(region => {
@@ -107,7 +109,6 @@ class Intersection extends Panel {
                         points.push([coordinates.pointsSide1[index][0] * Math.cos(j * 2 * Math.PI / n), coordinates.pointsSide1[index][0] * Math.sin(j * 2 * Math.PI / n)]);
                     }
                     this.createCrossSection(points, svg, region.color);
-                    
                     points = [];
                     index = coordinates.pointsSide2.findIndex(m => m[1] >= z);
                     for (var j = 0; j <= n; j++) {
@@ -125,23 +126,20 @@ class Intersection extends Panel {
         let pathD = "M", counter = 0, origin = { x: this.contentWidth / 2, y: this.contentHeight / 2 };
         points.forEach(point => {
             counter++;
-            let x = origin.x + (point[0] * origin.x / 4), y = origin.y - (point[1] * origin.y / 4);
+            let x = origin.x + point[0] * (this.contentWidth - this.padding) / 2 / this.orbital.maximumXY, 
+                y = origin.y - point[1] * (this.contentHeight - this.padding) / 2 / this.orbital.maximumXY;
             if (counter == points.length)
                 pathD += x + "," + y + "Z";
             else
                 pathD += x + "," + y + "L";
         });
-        let path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.classList.add('cross-section');
-        path.setAttribute("stroke", color);
-        path.setAttribute("fill", "transparent");
-        path.setAttribute('d', pathD);
-        svg.appendChild(path);
+        svg.appendChild(Util.createPath(pathD, color, 'cross-section'));
     }
 
     createPlane() {
         let points: THREE.Vector2[] = [];
-        const coordinates = [[5, 5], [-5, 5], [-5, -5], [5, -5]];
+        let max = this.orbital.maximumXY;
+        const coordinates = [[max, max], [-max, max], [-max, -max], [max, -max]];
         function addPoints(point: number[]) {
             points.push(new THREE.Vector2(point[0], point[1]));
         }

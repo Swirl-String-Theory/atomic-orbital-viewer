@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { orbitals } from './data/orbital-data';
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
 import { LoopSubdivision } from 'three-subdivide';
-import { Orbital, OrbitalRegion } from './types';
+import { Orbital } from './types';
 
 
 class OrbitalBuilder
@@ -36,7 +36,7 @@ class OrbitalBuilder
     }
 
     createOrbital() {
-        let regions = this.current._regions, minimum = this.current.minimum, maximum = this.current.maximum;
+        let regions = this.current._regions;
         let meshes: THREE.Mesh[] = [], geometry;
         regions.forEach(region => {
             let points: (THREE.Vector2 | THREE.Vector3)[] = [];
@@ -68,7 +68,7 @@ class OrbitalBuilder
                 mesh.rotation.x = Math.PI / 2;
             meshes.push(mesh);
         });
-        return { meshes, minimum, maximum };
+        return { meshes };
     }
 }
 export default OrbitalBuilder

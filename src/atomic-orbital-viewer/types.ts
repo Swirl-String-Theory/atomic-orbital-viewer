@@ -1,8 +1,9 @@
 import { CrudeRegion } from "./components/component";
 
 export type Orbital = {
-    minimum: number;
-    maximum: number;
+    maximumZ: number;
+    maximumXY: number;
+    probability: (x: number, y: number, z: number) => number,
     _regions: CrudeRegion[];
     regions: OrbitalRegion[];
 };

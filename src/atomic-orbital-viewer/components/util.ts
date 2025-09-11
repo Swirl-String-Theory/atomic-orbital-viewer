@@ -28,4 +28,13 @@ export default class Util {
         line.setAttribute('x2', x2.toString());
         line.setAttribute('y2', y2.toString());
     }
+
+    static createPath = (pathD: string, color: string, className: string) => {
+        let path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.classList.add(className);
+        path.setAttribute("stroke", color);
+        path.setAttribute("fill", "transparent");
+        path.setAttribute('d', pathD);
+        return path;
+    }
 }

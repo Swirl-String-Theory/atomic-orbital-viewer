@@ -2,8 +2,9 @@ import { Orbital } from "../types";
 
 export const orbitals: Orbital[] = [
     {
-        minimum: -3,
-        maximum: 3,
+        maximumZ: 4.1,
+        maximumXY: 4,
+        probability: (x,y,z) => Math.exp(-Math.sqrt((x/4)**2 + (y/4)**2 + (z/4)**2)),
         regions: [],
         _regions: [
             {
@@ -75,8 +76,9 @@ export const orbitals: Orbital[] = [
         ]
     },
     {
-        minimum: -5,
-        maximum: 5,
+        maximumZ: 4,
+        maximumXY: 4,
+        probability: (x,y,z) => 30 * Math.exp(-5 * Math.sqrt(x**2 + y**2 + z**2)) * (5 * z**3 - 3 * z * (x**2 + y**2 + z**2)) ** 2,
         regions: [],
         _regions: [
             {

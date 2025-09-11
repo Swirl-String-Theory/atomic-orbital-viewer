@@ -54,14 +54,13 @@ class OrbitalViewer {
     }
 
     init() {
-        const orbital = this.orbitalBuilder.createOrbital();
-        this.meshes = orbital.meshes;
-        let intersectorZ = (orbital.minimum + orbital.maximum) / 2;
+        this.meshes = this.orbitalBuilder.createOrbital().meshes;
+        let intersectorZ = this.orbitalBuilder.current.maximumZ / 4;
         this.meshes.forEach(mesh => this.scene.add(mesh));
         let settings = {
             intersector:{
-                min: orbital.minimum,
-                max: orbital.maximum,
+                min: -this.orbitalBuilder.current.maximumZ,
+                max: +this.orbitalBuilder.current.maximumZ,
                 event: (val: number) => this.changeIntersector(val)
             },
             orbital:{
