@@ -2,17 +2,17 @@
 import * as THREE from 'three';
 import { createRenderer } from './systems/renderer';
 import { Resizer } from './systems/resizer';
-import { Loop } from './systems/Loop';
 import { createOrbitControls } from './systems/orbit-controls';
-import { createCamera } from './components/camera';
-import { createScene } from './components/scene';
-import { createLights } from './components/lights';
-import { createAxis } from './components/axis';
-import OrbitalBuilder from './components/orbital-builder';
+import { createCamera } from './systems/camera';
+import { createScene } from './systems/scene';
+import { createLights } from './systems/lights';
+import { createAxis } from './systems/axis';
+import OrbitalBuilder from './orbital-builder';
 import { createSetting } from './components/settings';
 import Intersection from "./components/intersection";
 import { PerspectiveCamera, Scene, WebGLRenderer } from 'three';
 import { Orbital } from './types';
+import { Loop } from './systems/Loop';
 
 class OrbitalViewer {
     camera: PerspectiveCamera;

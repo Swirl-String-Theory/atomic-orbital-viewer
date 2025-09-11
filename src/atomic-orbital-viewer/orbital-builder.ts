@@ -1,8 +1,8 @@
 import * as THREE from 'three';
-import { orbitals } from '../data/orbital-data';
+import { orbitals } from './data/orbital-data';
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
 import { LoopSubdivision } from 'three-subdivide';
-import { Orbital, OrbitalRegion } from '../types';
+import { Orbital, OrbitalRegion } from './types';
 
 
 class OrbitalBuilder
