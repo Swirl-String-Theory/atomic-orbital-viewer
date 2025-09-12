@@ -1,6 +1,7 @@
 import { CrudeRegion } from "./components/component";
 
 export type Orbital = {
+    title: string,
     maximumZ: number;
     maximumXY: number;
     probability: (x: number, y: number, z: number) => number,

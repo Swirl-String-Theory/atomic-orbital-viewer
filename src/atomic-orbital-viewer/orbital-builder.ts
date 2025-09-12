@@ -8,8 +8,10 @@ import { Orbital } from './types';
 class OrbitalBuilder
 {
     current: Orbital;
+    all: Orbital[];
     constructor(selectedIndex: number)
     {
+        this.all = orbitals;
         this.current = orbitals[selectedIndex];
         this.current.regions = [];
         this.current._regions.forEach(region => {

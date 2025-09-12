@@ -12,14 +12,14 @@ import { createSetting } from './components/settings';
 import Intersection from "./components/intersection";
 import { PerspectiveCamera, Scene, WebGLRenderer } from 'three';
 import { Orbital } from './types';
-import { Loop } from './systems/Loop';
+import { Loop } from './systems/loop';
 
 class OrbitalViewer {
     camera: PerspectiveCamera;
     scene: Scene;
     renderer: WebGLRenderer;
     loop: Loop;
-    orbitalInx: number = 1;
+    orbitalInx: number = 0;
     orbitalBuilder: OrbitalBuilder;
     orbital: Orbital;
     intersection: Intersection;
@@ -57,6 +57,7 @@ class OrbitalViewer {
         this.meshes = this.orbitalBuilder.createOrbital().meshes;
         let intersectorZ = this.orbitalBuilder.current.maximumZ / 4;
         this.meshes.forEach(mesh => this.scene.add(mesh));
+        let titles = this.orbitalBuilder.all.map(x => x.title);
         let settings = {
             intersector:{
                 min: -this.orbitalBuilder.current.maximumZ,
@@ -64,10 +65,10 @@ class OrbitalViewer {
                 event: (val: number) => this.changeIntersector(val)
             },
             orbital:{
-                data: [0,1],
-                current: this.orbitalInx,
+                data: titles,
+                current: titles[this.orbitalInx],
                 intersector: intersectorZ,
-                event: (val: number) => this.changeOrbital(val)
+                event: (title: string) => this.changeOrbital(title)
             }
         };
         createSetting(settings);
@@ -84,9 +85,9 @@ class OrbitalViewer {
         this.intersection.update(value);
     }
 
-    changeOrbital(value: number) {
+    changeOrbital(title: string) {
         this.clear();
-        this.orbitalInx = value;
+        this.orbitalInx = this.orbitalBuilder.all.findIndex(x => x.title == title);
         this.orbitalBuilder = new OrbitalBuilder(this.orbitalInx);
         this.intersection.orbitalChanged(this.orbitalBuilder.current);
         this.init();
