@@ -1,6 +1,6 @@
 import mpmath as mp
 
-f=lambda costeta: 125*(6/5)**3*(5*costeta**3 - 3*costeta)*mp.e**(-5*6/5/2)+1
+f=lambda costeta: 125*(6/5)**3*(5*costeta**3 - 3*costeta)*mp.e**(-5*6/5/2) + 3
 
 df=lambda costeta: mp.diff(f, costeta)
 
