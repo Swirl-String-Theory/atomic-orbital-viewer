@@ -21,22 +21,22 @@ $$ \psi_{nlm} = R_{nl}(r)\times Y_{l}^{m}(\theta,\phi) $$
 $$
 R_{n\ell}(r) =
 \left(\frac{2Z}{na_0}\right)^{3/2}
-\sqrt{\frac{(n-\ell-1)!}{2n\quad(n+\ell)!}}
-\quad e^{-\rho/2}\quad\rho^{\ell}\quad
-L^{2\ell+1}_{\quad n-\ell-1}(\rho),
+\sqrt{\frac{(n-\ell-1)!}{2n\ (n+\ell)!}}
+\  e^{-\rho/2}\ \rho^{\ell}\ 
+L^{2\ell+1}_{\  n-\ell-1}(\rho),
 $$
 
 $$
 Y_{\ell}^{m}(\theta,\phi) =
-(-1)^{m}\quad
-\sqrt{\frac{2\ell + 1}{4\pi}\quad \frac{(\ell - m)!}{(\ell + m)!}}
-\quad P_{\ell}^{m}(\cos\theta)\quad e^{i m \phi},
+(-1)^{m}\ 
+\sqrt{\frac{2\ell + 1}{4\pi}\  \frac{(\ell - m)!}{(\ell + m)!}}
+\  P_{\ell}^{m}(\cos\theta)\  e^{i m \phi},
 $$
 
 where
 
 $$
-\rho = \frac{2Zr}{na_0}, \quad
+\rho = \frac{2Zr}{na_0}, \ 
 a_0 = \text{Bohr radius}.
 $$
 
@@ -52,14 +52,14 @@ and
 For this case:
 
 $$
-n - \ell - 1 = 0 \quad\Rightarrow\quad L^{7}_{0}(\rho) = 1
+n - \ell - 1 = 0 \ \Rightarrow\  L^{7}_{0}(\rho) = 1
 $$
 
 We use $`\dfrac{5Z}{2a_0}r \Rightarrow r`$ conversion to place $\psi_{nlm}$ in the range $`(-5, 5)`$. Thus,
 
 $$
 \psi_{4,3,0} = R_{4,3}(r)\times Y_{3}^{0}(\theta,\phi) =
-C\quad e^{-5r/2} \big(5z^3 - 3zr^2\big).
+C\  e^{-5r/2} \big(5z^3 - 3zr^2\big).
 $$
 
 where
@@ -73,7 +73,7 @@ $$
 To depict $\psi$ in three dimensions, we set it equal to a relatively small constant value:
 
 $$
-e^{-5r/2} \big(5z^3 - 3zr^2\big) = \pm\frac{3}{125} \quad\quad\quad\quad\text{or}\quad\quad\quad\quad
+e^{-5r/2} \big(5z^3 - 3zr^2\big) = \pm\frac{3}{125} \ \ \ \ \text{or}\ \ \ \ 
 r^3e^{-5r/2} \big(5\cos^3\theta - 3\cos\theta\big) = \pm\frac{3}{125}
 $$
 
@@ -95,13 +95,13 @@ To find the intersection points in the xz-plane, we use these two values ​​a
 To draw the upper annular region, we first find the bounds of $\cos\theta$. Since $\mathrm d \theta = 0$ at upper and lower bounds, $\frac{\mathrm d}{\mathrm d r} \psi = 0$ equation yields $r$ at these points.
 
 $$
-\mathrm d \theta = 0,\quad \frac{\mathrm d}{\mathrm d r} \psi = 0\quad \Rightarrow\quad r=6/5
+\mathrm d \theta = 0,\  \frac{\mathrm d}{\mathrm d r} \psi = 0\  \Rightarrow\  r=6/5
 $$
 
 Thus
 
 $$
-r^3e^{-5r/2} \big(5\cos^3\theta - 3\cos\theta\big) = +\frac{3}{125}, r=6/5\quad \Rightarrow\quad (\theta_1, \theta_2)
+r^3e^{-5r/2} \big(5\cos^3\theta - 3\cos\theta\big) = +\frac{3}{125}, r=6/5\  \Rightarrow\  (\theta_1, \theta_2)
 $$
 
 To find the intersection points in the xz-plane, we use these two values ​​as initial values ​​for numerical calculations.
