@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Orbital, OrbitalRegion } from '../types';
+import { Orbital } from '../types';
 import Util from './util';
 import { Probability } from './probability';
 import { Panel } from './panel';
@@ -8,6 +8,7 @@ class Intersection extends Panel {
     plane: THREE.Mesh | null;
     probability: Probability;
     padding = 5;
+    intersections: { color: string, points?: [number, number][], radius?: number } [] = []
     constructor(public orbital: Orbital) {
         super(false, 300, 300);
         this.probability = new Probability(orbital);
@@ -57,7 +58,7 @@ class Intersection extends Panel {
                 Util.moveLine(crossLine, 5, height, width, height);
                 icon.setAttribute('transform', `translate(${width},${height - 11.5})`);
                 this.setProbabilityY(height);
-                this.probability.update();
+                this.updateProbability();
             }
             originY = e.clientY;
         }
@@ -73,14 +74,28 @@ class Intersection extends Panel {
         this.probability.setY(y);
     }
 
+    updateProbability() {
+        let regionLimits: { x: number, color: string }[] = []
+        this.intersections.forEach(item => {
+            if(item.radius) {
+                if(item.radius >= Math.abs(this.probability.y)) {
+                    let x = Math.sqrt(item.radius**2 - this.probability.y**2) / this.orbital.maximumXY;
+                    regionLimits.push({ x, color: item.color });
+                }
+            }
+        });
+        this.probability.update(regionLimits);
+    }
+
     update(z: number) {
         this.plane!.position.set(0, 0, z);
-        let points: [number, number][] = [];
+        this.intersections = [];
         let svg = document.querySelector('#intersection svg') as SVGSVGElement;
         let paths = [...document.getElementsByClassName("cross-section")];
         paths.forEach(path => svg.removeChild(path));
         this.orbital.regions.forEach(region => {
             if (region.isConvex) {
+                let points: [number, number][] = [];
                 points = [];
                 let coordinates = region.coordinates!;
                 for (var i = 0; i < coordinates.length; i++) {
@@ -92,21 +107,22 @@ class Intersection extends Panel {
             }
             else {
                 let coordinates = region.xzCoordinates!;
+                const addCircle = points => {
+                    let circle = this.getCircle(points, z)
+                    this.intersections.push({color: region.color, radius: circle.radius});
+                    this.createCrossSection(circle.points, svg, region.color);
+                }
                 if(z >= coordinates.minZ && z <= coordinates.maxZ){
-                    points = this.getCirclePoints(coordinates.pointsSide1, z)
-                    this.createCrossSection(points, svg, region.color);
-                    if(region.closed) {
-                        points = this.getCirclePoints(coordinates.pointsSide2, z)
-                        this.createCrossSection(points, svg, region.color); 
-                    }
+                    addCircle(coordinates.pointsSide1);
+                    if(region.closed) addCircle(coordinates.pointsSide2);
                 } 
             }         
         });
         this.probability.setZ(z);
-        this.probability.update();
+        this.updateProbability();
     }
 
-    getCirclePoints(points: [number, number][], z: number) {
+    getCircle(points: [number, number][], z: number) {
         let n = 100;
         let cilclePoints: [number, number][] = [];
         let index = points.findIndex(m => m[1] >= z);
@@ -119,7 +135,7 @@ class Intersection extends Panel {
         for (var j = 0; j <= n; j++) {
             cilclePoints.push([x * Math.cos(j * 2 * Math.PI / n), x * Math.sin(j * 2 * Math.PI / n)]);
         }
-        return cilclePoints;
+        return { points: cilclePoints, radius: x };
     }
 
     createCrossSection(points: [number, number][], svg: SVGSVGElement, color: string) {
