@@ -55,7 +55,7 @@ $$
 n - \ell - 1 = 0 \ \Rightarrow\  L^{7}_{0}(\rho) = 1
 $$
 
-We use $`\dfrac{5Z}{2a_0}r \Rightarrow r`$ conversion to place $\psi_{nlm}$ in the range $`(-5, 5)`$. Thus,
+We use $`5Zr/2a_0 \Rightarrow r`$ conversion to place $\psi_{nlm}$ in the range $`(-5, 5)`$. Thus,
 
 $$
 \psi_{4,3,0} = R_{4,3}(r)\times Y_{3}^{0}(\theta,\phi) =
@@ -88,7 +88,7 @@ z^3 e^{-5z/2} = +\frac{3}{250}
  \Rightarrow (z_1, z_2)
 $$
 
-To find the intersection points in the xz-plane, we use these two values ​​as initial values ​​for numerical calculations.
+To find the intersection points in the xz-plane, we use these two values ​​as initial values ​​for numerical calculations ([python code](/src/data/numeric/n4/l3/m0/convex.py)).
 
 ### Toroidal Lobes
 
@@ -104,8 +104,23 @@ $$
 r^3e^{-5r/2} \big(5\cos^3\theta - 3\cos\theta\big) = +\frac{3}{125}, r=6/5\  \Rightarrow\  (\theta_1, \theta_2)
 $$
 
-To find the intersection points in the xz-plane, we use these two values ​​as initial values ​​for numerical calculations.
+To find the intersection points in the xz-plane, we use these two values ​​as initial values ​​for numerical calculations ([python code](/src/data/numeric/n4/l3/m0/ring.py)).
 
+### Probability Distribution
+
+$$
+\psi_{4,3,0}^2 = \big(R_{4,3}(r)\times Y_{3}^{0}(\theta,\phi)\big)^2
+$$
+
+To normalize $\psi^2$, we can find the maximum values ​​of $\psi$ for the convex and annular regions, which lie at $x = 0, y = 0$ for the former, and $\theta \sim (\theta_1 + \theta_2)/2$ for the latter. Therefore, we only need to use numerical calculations to find the maximum value of univariate functions.
+
+To calculate the probability density accurately, we need to calculate the coefficient through:
+
+$$
+\int\limits_{r,\theta,\phi} \psi_{4,3,0}^2 = 1
+$$
+
+which we have skipped here.
 
 # References
 [Hydrogen-like atom](https://en.wikipedia.org/wiki/Hydrogen-like_atom)

@@ -1,4 +1,4 @@
-import OrbitalViewer from "./src/atomic-orbital-viewer/orbital-viewer";
+import OrbitalViewer from "./src/orbital-viewer";
 
 
 render();
