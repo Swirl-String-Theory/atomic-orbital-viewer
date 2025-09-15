@@ -81,7 +81,7 @@ This $4f_{z(5z2−3)}$ orbital consists of two toroidal lobes (annular regions) 
 
 ### Outer Lobes
 
-To draw the upper convex region, we first need to find the bounds of $z$. Since the shape is symmetric about the z-axis, we solve the equation for positive values ​​and $r = z$, which gives us two values ​​for $z$.
+To draw the upper convex region, we first need to find the bounds of $z$. Since the shape is symmetric about the z-axis, we solve the equation for positive values ​​and $r = z$, which gives us two values ​​for $z$ ([python code](/src/data/numeric/n4/l3/m0/convex-z-limit.py)).
 
 $$
 z^3 e^{-5z/2} = +\frac{3}{250}
@@ -92,7 +92,7 @@ To find the intersection points in the xz-plane, we use these two values ​​a
 
 ### Toroidal Lobes
 
-To draw the upper annular region, we first find the bounds of $\cos\theta$. Since $\mathrm d \theta = 0$ at upper and lower bounds, $\frac{\mathrm d}{\mathrm d r} \psi = 0$ equation yields $r$ at these points.
+To draw the upper annular region, we first find the bounds of $\cos\theta$. Since $\mathrm d \theta = 0$ at upper and lower bounds, $\frac{\mathrm d}{\mathrm d r} \psi = 0$ equation yields $r$ at these points ([python code](/src/data/numeric/n4/l3/m0/ring-costeta-limit.py)).
 
 $$
 \mathrm d \theta = 0,\  \frac{\mathrm d}{\mathrm d r} \psi = 0\  \Rightarrow\  r=6/5
@@ -101,7 +101,7 @@ $$
 Thus
 
 $$
-r^3e^{-5r/2} \big(5\cos^3\theta - 3\cos\theta\big) = +\frac{3}{125}, r=6/5\  \Rightarrow\  (\theta_1, \theta_2)
+r^3e^{-5r/2} \big(5\cos^3\theta - 3\cos\theta\big) = -\frac{3}{125}, r=6/5\  \Rightarrow\  (\theta_1, \theta_2)
 $$
 
 To find the intersection points in the xz-plane, we use these two values ​​as initial values ​​for numerical calculations ([python code](/src/data/numeric/n4/l3/m0/ring.py)).
