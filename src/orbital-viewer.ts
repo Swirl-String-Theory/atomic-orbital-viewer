@@ -13,6 +13,7 @@ import Intersection from "./components/intersection";
 import { PerspectiveCamera, Scene, WebGLRenderer } from 'three';
 import { Orbital } from './types';
 import { Loop } from './systems/loop';
+import { KnotLayer } from './knotlab/knot-layer';
 
 class OrbitalViewer {
     camera: PerspectiveCamera;
@@ -24,6 +25,8 @@ class OrbitalViewer {
     orbital: Orbital;
     intersection: Intersection;
     meshes: THREE.Mesh[];
+    knotLayer: KnotLayer;
+    isKnotLab = false;
 
     constructor(container: HTMLElement) {
         this.camera = createCamera();
@@ -53,10 +56,13 @@ class OrbitalViewer {
         this.loop.stop();
     }
 
-    init() {
+    async init() {
         this.meshes = this.orbitalBuilder.createOrbital().meshes;
         let intersectorZ = this.orbitalBuilder.current.maximumZ / 4;
         this.meshes.forEach(mesh => this.scene.add(mesh));
+        this.knotLayer = new KnotLayer();
+        await this.knotLayer.loadIndex();      // loads /knots/index.json
+        this.scene.add(this.knotLayer.group);  // initially empty
         let titles = this.orbitalBuilder.all.map(x => x.title);
         let settings = {
             intersector:{
@@ -92,6 +98,12 @@ class OrbitalViewer {
         this.intersection.orbitalChanged(this.orbitalBuilder.current);
         this.init();
     }
+// GUI handlers
+    setKnotLabEnabled(on:boolean){
+        this.isKnotLab = on;
+        this.knotLayer.group.visible = on;
+    }
+    setKnotEffects(on:boolean){ this.knotLayer.setEffects(on); }
+    async setKnotVisible(label:string, on:boolean){ await this.knotLayer.toggle(label,on); }
 }
-
 export default OrbitalViewer;

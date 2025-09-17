@@ -1,0 +1,20 @@
+{
+  "files": [
+	{"label": "3_1", "path": "3_1.fseries"},
+	{"label": "4_1", "path": "4_1.fseries"},
+	{"label": "5_1", "path": "5_1.fseries"},
+	{"label": "5_2", "path": "5_2.fseries"},
+	{"label": "6_1", "path": "6_1.fseries"},
+	{"label": "6_2", "path": "6_2.fseries"},
+	{"label": "6_3", "path": "6_3d.fseries"},
+	{"label": "7_1", "path": "7_1.fseries"},
+	{"label": "7_2", "path": "7_2.fseries"},
+	{"label": "7_3", "path": "7_3.fseries"},
+	{"label": "7_4", "path": "7_4.fseries"},
+	{"label": "7_5", "path": "7_5.fseries"},
+	{"label": "7_6", "path": "7_6d.fseries"},
+	{"label": "7_7", "path": "7_7d.fseries"},
+	{"label": "8_17", "path": "8_17.fseries"},
+	{"label": "8_18", "path": "8_18.fseries"}
+  ]
+}

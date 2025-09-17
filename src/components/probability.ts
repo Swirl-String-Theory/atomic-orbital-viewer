@@ -1,4 +1,4 @@
-
+import { g_swirl } from '../sst/constants';
 import { Orbital } from '../types';
 import { Panel } from './panel';
 import Util from './util';
@@ -51,6 +51,17 @@ export class Probability extends Panel {
             let line = Util.createLine(svg, origin.x + x, this.padding, origin.x + x, this.contentHeight - this.padding, xPoint.color, 'distribution');
             line.setAttribute('opacity', '0.4');
         })
+
+
+        /* inside update(y,z): after computing x-grid */
+        const phi = (r:number)=> - g_swirl() / Math.max(r,1e-6);
+        const phiVals = points.map(([X,_])=>{
+            const x = (X - origin.x) / (this.contentWidth - 2*this.padding) * this.orbital.maximumXY;
+            const r = Math.hypot(x, this.y, this.z);
+            return phi(r);
+        });
+        /* rescale phiVals linearly to panel height and draw as a thin path */
+
     }
 
     moveDown(height: number, width: number) {

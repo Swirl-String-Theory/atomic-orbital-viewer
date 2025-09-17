@@ -1,4 +1,7 @@
 import { Orbital } from "../types";
+import { psi_2p_m_plus1, psi_2p_m_minus1 } from "../sst/wavefunctions";
+import { abs2 } from "../sst/superpose";
+
 
 export const orbitals: Orbital[] = [
     {
@@ -31,5 +34,19 @@ export const orbitals: Orbital[] = [
                 mirrorRegionInx: 0
             }
         ]
+    },
+    {
+        title: '2p, m=+1 (R)',
+        maximumZ: 5.0, maximumXY: 5.0,
+        wave: psi_2p_m_plus1(false), // QM mode by default; swap by UI
+        probability: (x,y,z)=> abs2(psi_2p_m_plus1(false)(x,y,z)),
+        regions: [], _regions: []
+    },
+    {
+        title: '2p, m=-1 (T)',
+        maximumZ: 5.0, maximumXY: 5.0,
+        wave: psi_2p_m_minus1(false),
+        probability: (x,y,z)=> abs2(psi_2p_m_minus1(false)(x,y,z)),
+        regions: [], _regions: []
     }
 ];
